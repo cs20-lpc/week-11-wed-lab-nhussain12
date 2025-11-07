@@ -2,34 +2,38 @@ template <typename T>
 int HashTableClosed<T>::insert(const T& key)
 {
     // TO DO:
-    int i = 0;
-    while (i < M) {
+    for (int i = 0; i < this->M; ++i) {
         int index = probeIndex(key, i);
-        if (!occupied[index]) {
-            table[index] = key;
-            occupied[index] = true;
-            N++;
-            return index;
+
+        if (!this->occupied[index]) {
+            this->table[index] = key;
+            this->occupied[index] = true;
+            this->N++;
+            return i + 1;
         }
-        i++;
+
+        if (this->table[index] == key) {
+            return i + 1;
+        }
     }
-    throw string("insert: error, hash table overflow");
+
+    throw string("Hash table overflow");
 }
 
 template <typename T>
 pair<bool, int> HashTableClosed<T>::search(const T& key) const
 {
     // TO DO: 
-    int i = 0;
-    while (i < M) {
+    for (int i = 0; i < this->M; ++i) {
         int index = probeIndex(key, i);
-        if (!occupied[index]) {
-            return {false, -1}; 
+
+        if (!this->occupied[index]) {
+            return {false, i + 1};
         }
-        if (table[index] == key) {
-            return {true, index}; 
+
+        if (this->table[index] == key) {
+            return {true, i + 1};
         }
-        i++;
     }
-    return {false, -1};
+    return {false, this->M};
 }
